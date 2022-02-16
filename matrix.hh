@@ -70,6 +70,14 @@ namespace micro::math
 	// ----------------------------- 2 x 3 ----------------------------- //
 
 	template <class T>
+	constexpr TMatrix3x2<T> transpose(TMatrix2x3<T> const &m) noexcept
+	{
+		return TMatrix3x2<T>{m._11(), m._21(),
+				     m._12(), m._22(),
+				     m._13(), m._23()};
+	}
+
+	template <class T>
 	constexpr TMatrix2x2<T> operator*(TMatrix2x3<T> const &l,
 					  TMatrix3x2<T> const &r) noexcept
 	{
@@ -117,6 +125,15 @@ namespace micro::math
 	// ----------------------------- 2 x 4 ----------------------------- //
 
 	template <class T>
+	constexpr TMatrix4x2<T> transpose(TMatrix2x4<T> const &m) noexcept
+	{
+		return TMatrix4x2<T>{m._11(), m._21(),
+				     m._12(), m._22(),
+				     m._13(), m._23(),
+				     m._14(), m._24()};
+	}
+
+	template <class T>
 	constexpr TMatrix2x2<T> operator*(TMatrix2x4<T> const &l,
 					  TMatrix4x2<T> const &r) noexcept
 	{
@@ -162,6 +179,13 @@ namespace micro::math
 	}
 
 	// ----------------------------- 3 x 2 ----------------------------- //
+
+	template <class T>
+	constexpr TMatrix2x3<T> transpose(TMatrix3x2<T> const &m) noexcept
+	{
+		return TMatrix2x3<T>{m._11(), m._21(), m._31(),
+				     m._12(), m._22(), m._32()};
+	}
 
 	template <class T>
 	constexpr TMatrix3x2<T> operator*(TMatrix3x2<T> const &l,
@@ -254,6 +278,15 @@ namespace micro::math
 	// ----------------------------- 3 x 4 ----------------------------- //
 
 	template <class T>
+	constexpr TMatrix4x3<T> transpose(TMatrix3x4<T> const &m) noexcept
+	{
+		return TMatrix4x3<T>{m._11(), m._21(), m._31(),
+				     m._12(), m._22(), m._32(),
+				     m._13(), m._23(), m._33(),
+				     m._14(), m._24(), m._34()};
+	}
+
+	template <class T>
 	constexpr TMatrix3x2<T> operator*(TMatrix3x4<T> const &l,
 					  TMatrix4x2<T> const &r) noexcept
 	{
@@ -322,6 +355,13 @@ namespace micro::math
 	// ----------------------------- 4 x 2 ----------------------------- //
 
 	template <class T>
+	constexpr TMatrix2x4<T> transpose(TMatrix4x2<T> const &m) noexcept
+	{
+		return TMatrix2x4<T>{m._11(), m._21(), m._31(), m._41(),
+				     m._12(), m._22(), m._32(), m._42()};
+	}
+
+	template <class T>
 	constexpr TMatrix4x2<T> operator*(TMatrix4x2<T> const &l,
 					  TMatrix2x2<T> const &r) noexcept
 	{
@@ -379,6 +419,14 @@ namespace micro::math
 	}
 
 	// ----------------------------- 4 x 3 ----------------------------- //
+
+	template <class T>
+	constexpr TMatrix3x4<T> transpose(TMatrix4x3<T> const &m) noexcept
+	{
+		return TMatrix3x4<T>{m._11(), m._21(), m._31(), m._41(),
+				     m._12(), m._22(), m._32(), m._42(),
+				     m._13(), m._23(), m._33(), m._43()};
+	}
 
 	template <class T>
 	constexpr TMatrix4x2<T> operator*(TMatrix4x3<T> const &l,
@@ -503,56 +551,6 @@ namespace micro::math
 				     E + F + G + H,
 				     I + J + K + L,
 				     M + N + O + P};
-	}
-
-	// ----------------------------------------------------------------- //
-
-	template <class T>
-	constexpr TMatrix3x2<T> transpose(TMatrix2x3<T> const &m) noexcept
-	{
-		return TMatrix3x2<T>{m._11(), m._21(),
-				     m._12(), m._22(),
-				     m._13(), m._23()};
-	}
-
-	template <class T>
-	constexpr TMatrix4x2<T> transpose(TMatrix2x4<T> const &m) noexcept
-	{
-		return TMatrix4x2<T>{m._11(), m._21(),
-				     m._12(), m._22(),
-				     m._13(), m._23(),
-				     m._14(), m._24()};
-	}
-
-	template <class T>
-	constexpr TMatrix2x3<T> transpose(TMatrix3x2<T> const &m) noexcept
-	{
-		return TMatrix2x3<T>{m._11(), m._21(), m._31(),
-				     m._12(), m._22(), m._32()};
-	}
-
-	template <class T>
-	constexpr TMatrix4x3<T> transpose(TMatrix3x4<T> const &m) noexcept
-	{
-		return TMatrix4x3<T>{m._11(), m._21(), m._31(),
-				     m._12(), m._22(), m._32(),
-				     m._13(), m._23(), m._33(),
-				     m._14(), m._24(), m._34()};
-	}
-
-	template <class T>
-	constexpr TMatrix2x4<T> transpose(TMatrix4x2<T> const &m) noexcept
-	{
-		return TMatrix2x4<T>{m._11(), m._21(), m._31(), m._41(),
-				     m._12(), m._22(), m._32(), m._42()};
-	}
-
-	template <class T>
-	constexpr TMatrix3x4<T> transpose(TMatrix4x3<T> const &m) noexcept
-	{
-		return TMatrix3x4<T>{m._11(), m._21(), m._31(), m._41(),
-				     m._12(), m._22(), m._32(), m._42(),
-				     m._13(), m._23(), m._33(), m._43()};
 	}
 }
 
