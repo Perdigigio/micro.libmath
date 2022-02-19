@@ -184,6 +184,20 @@ namespace micro::math
 				     m.data[3] / s};
 	}
 
+	// ----------------------------- Unary ----------------------------- //
+
+	template <class T>
+	constexpr TMatrix4x4<T> operator+(TMatrix4x4<T> const &a) noexcept
+	{
+		return a;
+	}
+
+	template <class T>
+	constexpr TMatrix4x4<T> operator-(TMatrix4x4<T> const &a) noexcept
+	{
+		return TMatrix4x4<T>{} - a;
+	}
+
 	// --------------------------- Relational -------------------------- //
 
 	template <class T>

@@ -13,135 +13,124 @@
 
 namespace micro::math
 {
-	inline TVector4<float> __vectorcall operator+(TVector4<float> a,
-						      TVector4<float> b) noexcept
+	inline TVector4<float> __vectorcall operator+(TVector4<float> const &a,
+						      TVector4<float> const &b) noexcept
 	{
-		_mm_storeu_ps(a.data, _mm_add_ps(_mm_loadu_ps(a.data),
-						 _mm_loadu_ps(b.data)));
-		return a;
+		alignas(alignof(__m128)) TVector4<float> r;
+
+		auto const A = _mm_loadu_ps(a.data);
+		auto const B = _mm_loadu_ps(b.data);
+
+		_mm_store_ps(r.data, _mm_add_ps(A, B));
+
+		return r;
 	}
 
-	inline TVector4<float> __vectorcall operator-(TVector4<float> a,
-						      TVector4<float> b) noexcept
+	inline TVector4<float> __vectorcall operator-(TVector4<float> const &a,
+						      TVector4<float> const &b) noexcept
 	{
-		_mm_storeu_ps(a.data, _mm_sub_ps(_mm_loadu_ps(a.data),
-						 _mm_loadu_ps(b.data)));
-		return a;
+		alignas(alignof(__m128)) TVector4<float> r;
+
+		auto const A = _mm_loadu_ps(a.data);
+		auto const B = _mm_loadu_ps(b.data);
+
+		_mm_store_ps(r.data, _mm_sub_ps(A, B));
+
+		return r;
 	}
 
-	inline TVector4<float> __vectorcall operator*(TVector4<float> a,
-						      TVector4<float> b) noexcept
+	inline TVector4<float> __vectorcall operator*(TVector4<float> const &a,
+						      TVector4<float> const &b) noexcept
 	{
-		_mm_storeu_ps(a.data, _mm_mul_ps(_mm_loadu_ps(a.data),
-						 _mm_loadu_ps(b.data)));
-		return a;
+		alignas(alignof(__m128)) TVector4<float> r;
+
+		auto const A = _mm_loadu_ps(a.data);
+		auto const B = _mm_loadu_ps(b.data);
+
+		_mm_store_ps(r.data, _mm_mul_ps(A, B));
+
+		return r;
 	}
 
-	inline TVector4<float> __vectorcall operator/(TVector4<float> a,
-						      TVector4<float> b) noexcept
+	inline TVector4<float> __vectorcall operator/(TVector4<float> const &a,
+						      TVector4<float> const &b) noexcept
 	{
-		_mm_storeu_ps(a.data, _mm_div_ps(_mm_loadu_ps(a.data),
-						 _mm_loadu_ps(b.data)));
-		return a;
-	}
+		alignas(alignof(__m128)) TVector4<float> r;
 
-	inline TVector4<float> __vectorcall operator*(TVector4<float> a, float s) noexcept
-	{
-		return a * TVector4<float>{s, s, s, s};
-	}
+		auto const A = _mm_loadu_ps(a.data);
+		auto const B = _mm_loadu_ps(b.data);
 
-	inline TVector4<float> __vectorcall operator/(TVector4<float> a, float s) noexcept
-	{
-		return a / TVector4<float>{s, s, s, s};
-	}
+		_mm_store_ps(r.data, _mm_div_ps(A, B));
 
-	inline TVector4<float> __vectorcall operator*(float s, TVector4<float> a) noexcept
-	{
-		return TVector4<float>{s, s, s, s} * a;
-	}
-
-	inline TVector4<float> __vectorcall operator/(float s, TVector4<float> a) noexcept
-	{
-		return TVector4<float>{s, s, s, s} / a;
+		return r;
 	}
 
 	// ----------------------------------------------------------------- //
 
-	inline TVector4<double> __vectorcall operator+(TVector4<double> a,
-						       TVector4<double> b) noexcept
+	inline TVector4<double> __vectorcall operator+(TVector4<double> const &a,
+						       TVector4<double> const &b) noexcept
 	{
+		alignas(alignof(__m128)) TVector4<double> r;
+
 		auto const A = _mm_loadu_pd(a.data + 0);
 		auto const B = _mm_loadu_pd(b.data + 0);
 		auto const C = _mm_loadu_pd(a.data + 2);
 		auto const D = _mm_loadu_pd(b.data + 2);
 
-		_mm_storeu_pd(a.data + 0, _mm_add_pd(A, B));
-		_mm_storeu_pd(a.data + 2, _mm_add_pd(C, D));
+		_mm_store_pd(r.data + 0, _mm_add_pd(A, B));
+		_mm_store_pd(r.data + 2, _mm_add_pd(C, D));
 
-		return a;
+		return r;
 	}
 
-	inline TVector4<double> __vectorcall operator-(TVector4<double> a,
-						       TVector4<double> b) noexcept
+	inline TVector4<double> __vectorcall operator-(TVector4<double> const &a,
+						       TVector4<double> const &b) noexcept
 	{
+		alignas(alignof(__m128)) TVector4<double> r;
+
 		auto const A = _mm_loadu_pd(a.data + 0);
 		auto const B = _mm_loadu_pd(b.data + 0);
 		auto const C = _mm_loadu_pd(a.data + 2);
 		auto const D = _mm_loadu_pd(b.data + 2);
 
-		_mm_storeu_pd(a.data + 0, _mm_sub_pd(A, B));
-		_mm_storeu_pd(a.data + 2, _mm_sub_pd(C, D));
+		_mm_store_pd(r.data + 0, _mm_sub_pd(A, B));
+		_mm_store_pd(r.data + 2, _mm_sub_pd(C, D));
 
-		return a;
+		return r;
 	}
 
-	inline TVector4<double> __vectorcall operator*(TVector4<double> a,
-						       TVector4<double> b) noexcept
+	inline TVector4<double> __vectorcall operator*(TVector4<double> const &a,
+						       TVector4<double> const &b) noexcept
 	{
+		alignas(alignof(__m128)) TVector4<double> r;
+
 		auto const A = _mm_loadu_pd(a.data + 0);
 		auto const B = _mm_loadu_pd(b.data + 0);
 		auto const C = _mm_loadu_pd(a.data + 2);
 		auto const D = _mm_loadu_pd(b.data + 2);
 
-		_mm_storeu_pd(a.data + 0, _mm_mul_pd(A, B));
-		_mm_storeu_pd(a.data + 2, _mm_mul_pd(C, D));
+		_mm_storeu_pd(r.data + 0, _mm_mul_pd(A, B));
+		_mm_storeu_pd(r.data + 2, _mm_mul_pd(C, D));
 
-		return a;
+		return r;
 	}
 
-	inline TVector4<double> __vectorcall operator/(TVector4<double> a,
-						       TVector4<double> b) noexcept
+	inline TVector4<double> __vectorcall operator/(TVector4<double> const &a,
+						       TVector4<double> const &b) noexcept
 	{
+		alignas(alignof(__m128)) TVector4<double> r;
+
 		auto const A = _mm_loadu_pd(a.data + 0);
 		auto const B = _mm_loadu_pd(b.data + 0);
 		auto const C = _mm_loadu_pd(a.data + 2);
 		auto const D = _mm_loadu_pd(b.data + 2);
 
-		_mm_storeu_pd(a.data + 0, _mm_div_pd(A, B));
-		_mm_storeu_pd(a.data + 2, _mm_div_pd(C, D));
+		_mm_store_pd(r.data + 0, _mm_div_pd(A, B));
+		_mm_store_pd(r.data + 2, _mm_div_pd(C, D));
 
-		return a;
+		return r;
 	}
 
-	inline TVector4<double> __vectorcall operator*(TVector4<double> a, double s) noexcept
-	{
-		return a * TVector4<double>{s, s, s, s};
-	}
-
-	inline TVector4<double> __vectorcall operator/(TVector4<double> a, double s) noexcept
-	{
-		return a / TVector4<double>{s, s, s, s};
-	}
-
-	inline TVector4<double> __vectorcall operator*(double s, TVector4<double> a) noexcept
-	{
-		return TVector4<double>{s, s, s, s} * a;
-	}
-
-	inline TVector4<double> __vectorcall operator/(double s, TVector4<double> a) noexcept
-	{
-		return TVector4<double>{s, s, s, s} / a;
-	}
 }
 
 #endif

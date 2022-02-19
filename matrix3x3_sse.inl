@@ -47,12 +47,26 @@ namespace micro::math
 		alignas(alignof(__m128)) float _1[4];
 		alignas(alignof(__m128)) float _2[4];
 
-		auto const A0 = _mm_set_ps(0.f, a.data[0].z(), a.data[0].y(), a.data[0].x());
-		auto const A1 = _mm_set_ps(0.f, a.data[1].z(), a.data[1].y(), a.data[1].x());
-		auto const A2 = _mm_set_ps(0.f, a.data[2].z(), a.data[2].y(), a.data[2].x());
-		auto const B0 = _mm_set_ps(0.f, b.data[0].z(), b.data[0].y(), b.data[0].x());
-		auto const B1 = _mm_set_ps(0.f, b.data[1].z(), b.data[1].y(), b.data[1].x());
-		auto const B2 = _mm_set_ps(0.f, b.data[2].z(), b.data[2].y(), b.data[2].x());
+		auto const a0 = _mm_load_sd(reinterpret_cast<double const *>(a.data[0].data)); // xy
+		auto const a1 = _mm_load_sd(reinterpret_cast<double const *>(a.data[1].data)); // xy
+		auto const a2 = _mm_load_sd(reinterpret_cast<double const *>(a.data[2].data)); // xy
+		auto const c0 = _mm_load_ss(a.data[0].data + 2); // z
+		auto const c1 = _mm_load_ss(a.data[1].data + 2); // z
+		auto const c2 = _mm_load_ss(a.data[2].data + 2); // z
+
+		auto const b0 = _mm_load_sd(reinterpret_cast<double const *>(b.data[0].data)); // xy
+		auto const b1 = _mm_load_sd(reinterpret_cast<double const *>(b.data[1].data)); // xy
+		auto const b2 = _mm_load_sd(reinterpret_cast<double const *>(b.data[2].data)); // xy
+		auto const d0 = _mm_load_ss(b.data[0].data + 2); // z
+		auto const d1 = _mm_load_ss(b.data[1].data + 2); // z
+		auto const d2 = _mm_load_ss(b.data[2].data + 2); // z
+
+		auto const A0 = _mm_movelh_ps(_mm_castpd_ps(a0), c0); // xyz0
+		auto const A1 = _mm_movelh_ps(_mm_castpd_ps(a1), c1); // xyz0
+		auto const A2 = _mm_movelh_ps(_mm_castpd_ps(a2), c2); // xyz0
+		auto const B0 = _mm_movelh_ps(_mm_castpd_ps(b0), d0); // xyz0
+		auto const B1 = _mm_movelh_ps(_mm_castpd_ps(b1), d1); // xyz0
+		auto const B2 = _mm_movelh_ps(_mm_castpd_ps(b2), d2); // xyz0
 
 		_mm_store_ps(_0, _m3x3_mul_ps(A0, B0, B1, B2));
 		_mm_store_ps(_1, _m3x3_mul_ps(A1, B0, B1, B2));

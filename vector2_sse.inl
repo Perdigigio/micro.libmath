@@ -13,56 +13,56 @@
 
 namespace micro::math
 {
-	inline TVector2<double> __vectorcall operator+(TVector2<double> a,
-						       TVector2<double> b) noexcept
+	inline TVector2<double> __vectorcall operator+(TVector2<double> const &a,
+						       TVector2<double> const &b) noexcept
 	{
-		_mm_storeu_pd(a.data, _mm_add_pd(_mm_loadu_pd(a.data),
-						 _mm_loadu_pd(b.data)));
-		return a;
+		alignas(alignof(__m128)) TVector2<double> r;
+
+		auto const A = _mm_loadu_pd(a.data);
+		auto const B = _mm_loadu_pd(b.data);
+
+		_mm_store_pd(r.data, _mm_add_pd(A, B));
+
+		return r;
 	}
 
-	inline TVector2<double> __vectorcall operator-(TVector2<double> a,
-						       TVector2<double> b) noexcept
+	inline TVector2<double> __vectorcall operator-(TVector2<double> const &a,
+						       TVector2<double> const &b) noexcept
 	{
-		_mm_storeu_pd(a.data, _mm_sub_pd(_mm_loadu_pd(a.data),
-						 _mm_loadu_pd(b.data)));
-		return a;
+		alignas(alignof(__m128)) TVector2<double> r;
+
+		auto const A = _mm_loadu_pd(a.data);
+		auto const B = _mm_loadu_pd(b.data);
+
+		_mm_store_pd(r.data, _mm_sub_pd(A, B));
+
+		return r;
 	}
 
-	inline TVector2<double> __vectorcall operator*(TVector2<double> a,
-						       TVector2<double> b) noexcept
+	inline TVector2<double> __vectorcall operator*(TVector2<double> const &a,
+						       TVector2<double> const &b) noexcept
 	{
-		_mm_storeu_pd(a.data, _mm_mul_pd(_mm_loadu_pd(a.data),
-						 _mm_loadu_pd(b.data)));
-		return a;
+		alignas(alignof(__m128)) TVector2<double> r;
+
+		auto const A = _mm_loadu_pd(a.data);
+		auto const B = _mm_loadu_pd(b.data);
+
+		_mm_store_pd(r.data, _mm_mul_pd(A, B));
+
+		return r;
 	}
 
 	inline TVector2<double> __vectorcall operator/(TVector2<double> a,
 						       TVector2<double> b) noexcept
 	{
-		_mm_storeu_pd(a.data, _mm_div_pd(_mm_loadu_pd(a.data),
-						 _mm_loadu_pd(b.data)));
-		return a;
-	}
+		alignas(alignof(__m128)) TVector2<double> r;
 
-	inline TVector2<double> __vectorcall operator*(TVector2<double> a, double s) noexcept
-	{
-		return a * TVector2<double>{s, s};
-	}
+		auto const A = _mm_loadu_pd(a.data);
+		auto const B = _mm_loadu_pd(b.data);
 
-	inline TVector2<double> __vectorcall operator/(TVector2<double> a, double s) noexcept
-	{
-		return a / TVector2<double>{s, s};
-	}
+		_mm_store_pd(r.data, _mm_div_pd(A, B));
 
-	inline TVector2<double> __vectorcall operator*(double s, TVector2<double> a) noexcept
-	{
-		return TVector2<double>{s, s} * a;
-	}
-
-	inline TVector2<double> __vectorcall operator/(double s, TVector2<double> a) noexcept
-	{
-		return TVector2<double>{s, s} / a;
+		return r;
 	}
 }
 

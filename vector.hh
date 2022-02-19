@@ -18,8 +18,8 @@ namespace micro::math
 							    std::is_same_v<TVector4<typename V::type>, std::remove_reference_t<std::remove_cv_t<V>>>>::value;
 
 	using Vector2 = TVector2<float>;
-	using Vector3 = TVector2<float>;
-	using Vector4 = TVector2<float>;
+	using Vector3 = TVector3<float>;
+	using Vector4 = TVector4<float>;
 
 	// ----------------------------------------------------------------- //
 
