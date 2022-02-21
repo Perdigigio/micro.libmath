@@ -38,10 +38,10 @@ inline bool eq(Vector4 const &a,
 	auto z = std::abs(a.z() - b.z());
 	auto w = std::abs(a.w() - b.w());
 
-	return (x < EPS || x <= A * EPS) &&
-	       (y < EPS || y <= B * EPS) &&
-	       (z < EPS || z <= C * EPS) &&
-	       (w < EPS || w <= D * EPS);
+	return (x <= EPS || x <= A * EPS) &&
+	       (y <= EPS || y <= B * EPS) &&
+	       (z <= EPS || z <= C * EPS) &&
+	       (w <= EPS || w <= D * EPS);
 }
 
 int main(int argc, char *argv[])

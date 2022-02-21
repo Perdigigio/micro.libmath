@@ -269,15 +269,19 @@ namespace micro::math
 	template <class T>
 	constexpr TMatrix3x3<T> adjoint(TMatrix3x3<T> const &m) noexcept
 	{
-		return TMatrix3x3<T>{m._22() * m._33() - m._23() * m._32(),
-				     m._23() * m._31() - m._21() * m._33(),
-				     m._21() * m._32() - m._22() * m._31(),
-				     m._13() * m._32() - m._12() * m._33(),
-				     m._11() * m._33() - m._13() * m._31(),
-				     m._12() * m._31() - m._11() * m._32(),
-				     m._12() * m._23() - m._13() * m._22(),
-				     m._13() * m._21() - m._11() * m._23(),
-				     m._11() * m._22() - m._12() * m._21()};
+		auto const A = m._22() * m._33() - m._23() * m._32();
+		auto const B = m._23() * m._31() - m._21() * m._33();
+		auto const C = m._21() * m._32() - m._22() * m._31();
+		auto const D = m._13() * m._32() - m._12() * m._33();
+		auto const E = m._11() * m._33() - m._13() * m._31();
+		auto const F = m._12() * m._31() - m._11() * m._32();
+		auto const G = m._12() * m._23() - m._13() * m._22();
+		auto const H = m._13() * m._21() - m._11() * m._23();
+		auto const I = m._11() * m._22() - m._12() * m._21();
+
+		return TMatrix3x3<T>{A, D, G,
+				     B, E, H,
+				     C, F, I};
 	}
 
 	template <class T>

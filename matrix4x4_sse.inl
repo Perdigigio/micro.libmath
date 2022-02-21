@@ -68,6 +68,63 @@ namespace micro::math
 		return {_0, _1, _2, _3};
 	}
 
+#ifdef __AVX__
+	/**
+	 * @brief Multiply a row from A matrix with all rows of B matrix
+	 * 
+	 * @param r A matrix row
+	 * @param a B matrix 1st-row
+	 * @param b B matrix 2nd-row
+	 * @param c B matrix 3rd-row
+	 * @param d B matrix 4th-row
+	 */
+	inline __m256d __vectorcall _m4x4_mul_pd(__m256d const r,
+						 __m256d const a,
+						 __m256d const b,
+						 __m256d const c,
+						 __m256d const d) noexcept
+	{
+		const auto A = _mm256_permute2f128_pd(r, r, 0b00'00); // X
+		const auto B = _mm256_permute2f128_pd(r, r, 0b01'01); // Y
+		const auto C = _mm256_permute2f128_pd(r, r, 0b10'10); // Z
+		const auto D = _mm256_permute2f128_pd(r, r, 0b11'11); // W
+		const auto E = _mm256_mul_pd(A, a); // X * a
+		const auto F = _mm256_mul_pd(B, b); // Y * b
+		const auto G = _mm256_mul_pd(C, c); // Z * c
+		const auto H = _mm256_mul_pd(D, d); // W * d
+		const auto I = _mm256_add_pd(E, G); // X * a + Z * c
+		const auto J = _mm256_add_pd(F, H); // Y * b + W * d
+		const auto K = _mm256_add_pd(I, J); // X * a + Z * c + Y * b + W * d
+
+		return K;
+	}
+
+	inline TMatrix4x4<double> operator *(TMatrix4x4<double> const &a,
+					     TMatrix4x4<double> const &b) noexcept
+	{
+		alignas(alignof(__m128)) TVector4<double> _0;
+		alignas(alignof(__m128)) TVector4<double> _1;
+		alignas(alignof(__m128)) TVector4<double> _2;
+		alignas(alignof(__m128)) TVector4<double> _3;
+
+		auto const A0 = _mm256_loadu_pd(a.data[0].data);
+		auto const A1 = _mm256_loadu_pd(a.data[1].data);
+		auto const A2 = _mm256_loadu_pd(a.data[2].data);
+		auto const A3 = _mm256_loadu_pd(a.data[3].data);
+		auto const B0 = _mm256_loadu_pd(b.data[0].data);
+		auto const B1 = _mm256_loadu_pd(b.data[1].data);
+		auto const B2 = _mm256_loadu_pd(b.data[2].data);
+		auto const B3 = _mm256_loadu_pd(b.data[3].data);
+
+		_mm256_store_pd(_0.data, _m4x4_mul_pd(A0, B0, B1, B2, B3));
+		_mm256_store_pd(_1.data, _m4x4_mul_pd(A1, B0, B1, B2, B3));
+		_mm256_store_pd(_2.data, _m4x4_mul_pd(A2, B0, B1, B2, B3));
+		_mm256_store_pd(_3.data, _m4x4_mul_pd(A3, B0, B1, B2, B3));
+
+		return {_0, _1, _2, _3};
+	}
+#endif
+
 	// ----------------------------------------------------------------- //
 
 	inline TMatrix4x4<float> __vectorcall transpose(TMatrix4x4<float> const &m) noexcept

@@ -32,8 +32,8 @@ inline bool eq(Vector2 const &a,
 	auto x = std::abs(a.x() - b.x());
 	auto y = std::abs(a.y() - b.y());
 
-	return (x < EPS || x <= A * EPS) &&
-	       (y < EPS || y <= B * EPS);
+	return (x <= EPS || x <= A * EPS) &&
+	       (y <= EPS || y <= B * EPS);
 }
 
 int main(int argc, char *argv[])

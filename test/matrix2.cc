@@ -34,8 +34,8 @@ inline bool eq(Vector2 const &a,
 	auto x = std::abs(a.x() - b.x());
 	auto y = std::abs(a.y() - b.y());
 
-	return (x < EPS || x <= A * EPS) &&
-	       (y < EPS || y <= B * EPS);
+	return (x <= EPS || x <= A * EPS) &&
+	       (y <= EPS || y <= B * EPS);
 }
 
 inline bool eq(Matrix2x2 const &a,
@@ -43,6 +43,13 @@ inline bool eq(Matrix2x2 const &a,
 {
 	return eq(a.data[0], b.data[0]) &&
 	       eq(a.data[1], b.data[1]);
+}
+
+inline bool eq(float a,
+	       float b) noexcept
+{
+	return std::abs(a - b) <= EPS ||
+	       std::abs(a - b) <= EPS * std::max(std::abs(a), std::abs(b));
 }
 
 int main(int argc, char *argv[])
@@ -221,6 +228,19 @@ void test_det()
 	auto b = const_cast<Matrix2x2 const &>(B);
 	auto c = const_cast<Matrix2x2 const &>(C);
 
+	if (!eq(det(a * b), det(a) * det(b)) ||
+	    !eq(det(b * c), det(b) * det(c)) ||
+	    !eq(det(c * a), det(c) * det(a)))
+	{
+		throw std::logic_error("@see " __FILE__ ":" STRINGIZE(__LINE__));
+	}
+
+	if (!eq(det(transpose(a)), det(a)) ||
+	    !eq(det(transpose(b)), det(b)) ||
+	    !eq(det(transpose(c)), det(c)))
+	{
+		throw std::logic_error("@see " __FILE__ ":" STRINGIZE(__LINE__));
+	}
 }
 
 void test_inv()
@@ -228,4 +248,48 @@ void test_inv()
 	auto a = const_cast<Matrix2x2 const &>(A);
 	auto b = const_cast<Matrix2x2 const &>(B);
 	auto c = const_cast<Matrix2x2 const &>(C);
+
+	if (eq(det(a), 0) ||
+	    eq(det(b), 0) || 
+	    eq(det(c), 0))
+	{
+		std::cerr << "One of the matrices among a, b or c is singular, cannot test" << std::endl;
+	}
+	else
+	{
+		if (!eq(inverse(a) * a, identity2x2<float>()) ||
+		    !eq(inverse(b) * b, identity2x2<float>()) ||
+		    !eq(inverse(c) * c, identity2x2<float>()))
+		{
+			throw std::logic_error("@see " __FILE__ ":" STRINGIZE(__LINE__));
+		}
+
+		if (!eq(det(inverse(a)), 1 / det(a)) ||
+		    !eq(det(inverse(b)), 1 / det(b)) ||
+		    !eq(det(inverse(c)), 1 / det(c)))
+		{
+			throw std::logic_error("@see " __FILE__ ":" STRINGIZE(__LINE__));
+		}
+
+		if (!eq(inverse(3.f * a), inverse(a) / 3.f) ||
+		    !eq(inverse(3.f * b), inverse(b) / 3.f) ||
+		    !eq(inverse(3.f * c), inverse(c) / 3.f))
+		{
+			throw std::logic_error("@see " __FILE__ ":" STRINGIZE(__LINE__));
+		}
+
+		if (!eq(inverse(transpose(a)), transpose(inverse(a))) ||
+		    !eq(inverse(transpose(b)), transpose(inverse(b))) ||
+		    !eq(inverse(transpose(c)), transpose(inverse(c))))
+		{
+			throw std::logic_error("@see " __FILE__ ":" STRINGIZE(__LINE__));
+		}
+
+		if (!eq(inverse(a * b), inverse(b) * inverse(a)) ||
+		    !eq(inverse(b * c), inverse(c) * inverse(b)) ||
+		    !eq(inverse(c * a), inverse(a) * inverse(c)))
+		{
+			throw std::logic_error("@see " __FILE__ ":" STRINGIZE(__LINE__));
+		}
+	}
 }

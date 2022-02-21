@@ -36,9 +36,9 @@ inline bool eq(Vector3 const &a,
 	auto y = std::abs(a.y() - b.y());
 	auto z = std::abs(a.z() - b.z());
 
-	return (x < EPS || x <= A * EPS) &&
-	       (y < EPS || y <= B * EPS) &&
-	       (z < EPS || z <= C * EPS);
+	return (x <= EPS || x <= A * EPS) &&
+	       (y <= EPS || y <= B * EPS) &&
+	       (z <= EPS || z <= C * EPS);
 }
 
 int main(int argc, char *argv[])
