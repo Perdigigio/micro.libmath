@@ -1,15 +1,13 @@
 cmake_minimum_required(VERSION 3.8)
 
-        project(Micro_Libmath LANGUAGES CXX VERSION 1.0.0)
-                add_library(micro.libmath INTERFACE)
+        project(Micro LANGUAGES CXX VERSION 1.0.0)
+                add_library(libmath INTERFACE)
 
-        #
         # FEATURES
         #
 
-        target_compile_features(micro.libmath INTERFACE cxx_std_17)
+        target_compile_features(libmath INTERFACE cxx_std_17)
 
-        #
         # INSTALLATION
         #
 
@@ -45,7 +43,6 @@ cmake_minimum_required(VERSION 3.8)
                       "${PROJECT_SOURCE_DIR}/vector4_arm.inl"
                       "${PROJECT_SOURCE_DIR}/vector4_sse.inl" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/libmath COMPONENT dev)
 
-        #
         # TESTING
         #
 
@@ -73,10 +70,15 @@ cmake_minimum_required(VERSION 3.8)
                 target_include_directories(libmath-test-matrix3 PRIVATE ${PROJECT_SOURCE_DIR})
                 target_include_directories(libmath-test-matrix4 PRIVATE ${PROJECT_SOURCE_DIR})
 
-                target_link_libraries(libmath-test-vector2 PRIVATE micro.libmath)
-                target_link_libraries(libmath-test-vector3 PRIVATE micro.libmath)
-                target_link_libraries(libmath-test-vector4 PRIVATE micro.libmath)
-                target_link_libraries(libmath-test-matrix2 PRIVATE micro.libmath)
-                target_link_libraries(libmath-test-matrix3 PRIVATE micro.libmath)
-                target_link_libraries(libmath-test-matrix4 PRIVATE micro.libmath)
+                target_link_libraries(libmath-test-vector2 PRIVATE libmath)
+                target_link_libraries(libmath-test-vector3 PRIVATE libmath)
+                target_link_libraries(libmath-test-vector4 PRIVATE libmath)
+                target_link_libraries(libmath-test-matrix2 PRIVATE libmath)
+                target_link_libraries(libmath-test-matrix3 PRIVATE libmath)
+                target_link_libraries(libmath-test-matrix4 PRIVATE libmath)
         endif()
+        
+        # ALIAS
+        #
+        
+        add_library(${PROJECT_NAME}::math ALIAS libmath)
