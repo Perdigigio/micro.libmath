@@ -2,8 +2,8 @@
 #include <stdexcept>
 #include <iostream>
 
-#include <matrix.hh>
-#include <vector.hh>
+#include <libmath/matrix.hh>
+#include <libmath/vector.hh>
 
 using namespace micro::math;
 

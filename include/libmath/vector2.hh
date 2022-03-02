@@ -3,14 +3,6 @@
 
 #include <type_traits>
 
-#if !defined(_MICRO_HAS_SSE_INTRINSICS) && (defined(_M_AMD64) || defined(__amd64__))
-#	define _MICRO_HAS_SSE_INTRINSICS 1
-#endif
-
-#if !defined(_MICRO_HAS_ARM_INTRINSICS) && (defined(_M_ARM64) || defined(_M_ARM) || defined(__ARM_NEON))
-#	define _MICRO_HAS_ARM_INTRINSICS 1
-#endif
-
 namespace micro::math
 {
 	template <class T,
@@ -222,11 +214,12 @@ namespace micro::math
 	}
 }
 
-#if _MICRO_HAS_SSE_INTRINSICS && _MICRO_HAS_ARM_INTRINSICS
-#	error "Cannot define both _MICRO_HAS_SSE_INTRINSICS and _MICRO_HAS_ARM_INTRINSICS"
-#elif _MICRO_HAS_SSE_INTRINSICS
+#if (defined(WITH_SSE_INTRINSICS) && defined(WITH_ARM_INTRINSICS)) || \
+    (defined(WITH_AVX_INTRINSICS) && defined(WITH_ARM_INTRINSICS))
+#	error "Cannot define both WITH_SSE_INTRINSICS or WITH_AVX_INTRINSICS and WITH_ARM_INTRINSICS"
+#elif defined(WITH_SSE_INTRINSICS) || defined(WITH_AVX_INTRINSICS)
 #	include "vector2_sse.inl"
-#elif _MICRO_HAS_ARM_INTRINSICS
+#elif defined(WITH_ARM_INTRINSICS)
 #	include "vector2_arm.inl"
 #endif
 #endif

@@ -1,0 +1,39 @@
+name: CMake
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        arch: [ x64 ]
+        os: [ macos-latest, windows-latest, ubuntu-latest ]
+
+    runs-on: ${{matrix.os}}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Configure
+      run: |
+        cmake -B ${{github.workspace}}/native -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+        cmake -B ${{github.workspace}}/intrin -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_WITH_AVX_INTRINSICS=ON
+
+    - name: Build
+      run: |
+        cmake --build ${{github.workspace}}/native --config ${{env.BUILD_TYPE}}
+        cmake --build ${{github.workspace}}/intrin --config ${{env.BUILD_TYPE}}
+
+    - name: Test
+      working-directory: ${{github.workspace}}/native
+      run: ctest -C ${{env.BUILD_TYPE}}
+
+    - name: Test
+      working-directory: ${{github.workspace}}/intrin
+      run: ctest -C ${{env.BUILD_TYPE}}

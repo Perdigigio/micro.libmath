@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include <iostream>
 
-#include <vector.hh>
+#include <libmath/vector.hh>
 
 using namespace micro::math;
 
