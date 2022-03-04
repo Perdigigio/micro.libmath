@@ -10,30 +10,21 @@ env:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        arch: [ arm64 ]
-        os: [ macos-latest, windows-latest, ubuntu-latest ]
-
-    runs-on: ${{matrix.os}}
-
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
 
-    - name: Configure
-      run: |
-        cmake -B ${{github.workspace}}/native -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
-        cmake -B ${{github.workspace}}/intrin -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_WITH_ARM_INTRINSICS=ON
-
-    - name: Build
-      run: |
-        cmake --build ${{github.workspace}}/native --config ${{env.BUILD_TYPE}}
-        cmake --build ${{github.workspace}}/intrin --config ${{env.BUILD_TYPE}}
-
-    - name: Test
-      working-directory: ${{github.workspace}}/native
-      run: ctest -C ${{env.BUILD_TYPE}}
-
-    - name: Test intrinsics
-      working-directory: ${{github.workspace}}/intrin
-      run: ctest -C ${{env.BUILD_TYPE}}
+    - name: ARM runner
+      uses: pguyot/arm-runner-action@v2.2.0
+      with:
+        base_image: raspios_lite_arm64:latest
+        cpu: cortex-a53
+        commands: |
+          apt-get install --no-install-recommends -y make gcc libc6-dev cmake
+          cmake --log-level=VERBOSE -B ${{env.github.workspace}}/native -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+          cmake --log-level=VERBOSE -B ${{env.github.workspace}}/intrin -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_WITH_ARM_INTRINSICS=ON
+          cmake --build ${{env.github.workspace}}/native --config ${{env.BUILD_TYPE}}
+          cmake --build ${{env.github.workspace}}/intrin --config ${{env.BUILD_TYPE}}
+          cd ${{env.github.workspace}}/native && ctest -C ${{env.BUILD_TYPE}}
+          cd ${{env.github.workspace}}/intrin && ctest -C ${{env.BUILD_TYPE}}

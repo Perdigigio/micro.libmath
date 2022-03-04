@@ -22,8 +22,8 @@ jobs:
 
     - name: Configure
       run: |
-        cmake -B ${{github.workspace}}/native -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
-        cmake -B ${{github.workspace}}/intrin -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_WITH_AVX_INTRINSICS=ON
+        cmake --log-level=VERBOSE -B ${{github.workspace}}/native -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+        cmake --log-level=VERBOSE -B ${{github.workspace}}/intrin -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_WITH_AVX_INTRINSICS=ON
 
     - name: Build
       run: |

@@ -20,7 +20,19 @@ cmake_minimum_required(VERSION 3.8)
 
 			target_compile_options(libmath INTERFACE "-mavx")
 		endif()
+	elseif (BUILD_WITH_ARM_INTRINSICS)
+		if (NOT MSVC)
+			# Enable NEON
+			#
+
+			target_compile_options(libmath INTERFACE "-march=armv8.1-a+simd")
+		endif()
 	endif(BUILD_WITH_AVX_INTRINSICS)
+
+
+	message(VERBOSE "BUILD_WITH_ARM_INTRINSICS: ${BUILD_WITH_ARM_INTRINSICS}")
+	message(VERBOSE "BUILD_WITH_SSE_INTRINSICS: ${BUILD_WITH_SSE_INTRINSICS}")
+	message(VERBOSE "BUILD_WITH_AVX_INTRINSICS: ${BUILD_WITH_AVX_INTRINSICS}")
 
 	target_compile_definitions(libmath INTERFACE $<$<BOOL:${BUILD_WITH_ARM_INTRINSICS}>: -DWITH_ARM_INTRINSICS>)
 	target_compile_definitions(libmath INTERFACE $<$<BOOL:${BUILD_WITH_SSE_INTRINSICS}>: -DWITH_SSE_INTRINSICS>)
@@ -31,9 +43,7 @@ cmake_minimum_required(VERSION 3.8)
 	# INCLUDE
 	#
 
-	target_include_directories(libmath INTERFACE
-		$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+	target_include_directories(libmath INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>)
 
 	# INSTALLATION
 	#
@@ -69,6 +79,8 @@ cmake_minimum_required(VERSION 3.8)
 		      "${PROJECT_SOURCE_DIR}/include/libmath/vector4.hh"
 		      "${PROJECT_SOURCE_DIR}/include/libmath/vector4_arm.inl"
 		      "${PROJECT_SOURCE_DIR}/include/libmath/vector4_sse.inl" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/libmath COMPONENT dev)
+
+	target_include_directories(libmath INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 	# TESTING
 	#
