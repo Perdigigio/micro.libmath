@@ -253,12 +253,4 @@ namespace micro::math
 	}
 }
 
-#if (defined(WITH_SSE_INTRINSICS) && defined(WITH_ARM_INTRINSICS)) || \
-    (defined(WITH_AVX_INTRINSICS) && defined(WITH_ARM_INTRINSICS))
-#	error "Cannot define both WITH_SSE_INTRINSICS or WITH_AVX_INTRINSICS and WITH_ARM_INTRINSICS"
-#elif defined(WITH_SSE_INTRINSICS) || defined(WITH_AVX_INTRINSICS)
-#	include "matrix2x2_sse.inl"
-#elif defined(WITH_ARM_INTRINSICS)
-#	include "matrix2x2_arm.inl"
-#endif
 #endif

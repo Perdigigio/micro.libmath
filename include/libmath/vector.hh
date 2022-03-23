@@ -50,4 +50,10 @@ namespace micro::math
 	inline auto rsub(T &&...m) noexcept { return (std::forward<T>(m) - ...); }
 }
 
+namespace micro::math::simd
+{
+	// Empty
+	//
+}
+
 #endif

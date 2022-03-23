@@ -554,4 +554,10 @@ namespace micro::math
 	}
 }
 
+namespace micro::math::simd
+{
+	// Empty
+	//
+}
+
 #endif

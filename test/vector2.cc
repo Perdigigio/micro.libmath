@@ -4,7 +4,16 @@
 
 #include <libmath/vector.hh>
 
+#ifdef WITH_SSE_INTRINSICS
+#	include <libmath/simd/sse.hh>
+#endif
+
+#ifdef WITH_ARM_INTRINSICS
+#	include <libmath/simd/arm.hh>
+#endif
+
 using namespace micro::math;
+using namespace micro::math::simd;
 
 constexpr float EPS = 4E-5f;
 

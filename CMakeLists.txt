@@ -11,33 +11,6 @@ cmake_minimum_required(VERSION 3.8)
 	# FEATURES
 	#
 
-	if (BUILD_WITH_AVX_INTRINSICS)
-		set (BUILD_WITH_SSE_INTRINSICS ON CACHE BOOL "force SSE intrinsics" FORCE)
-
-		if (NOT MSVC)
-			# Enable AVX
-			#
-
-			target_compile_options(libmath INTERFACE "-mavx")
-		endif()
-	elseif (BUILD_WITH_ARM_INTRINSICS)
-		if (NOT MSVC)
-			# Enable NEON
-			#
-
-			target_compile_options(libmath INTERFACE "-march=armv8.1-a+simd")
-		endif()
-	endif(BUILD_WITH_AVX_INTRINSICS)
-
-
-	message(VERBOSE "BUILD_WITH_ARM_INTRINSICS: ${BUILD_WITH_ARM_INTRINSICS}")
-	message(VERBOSE "BUILD_WITH_SSE_INTRINSICS: ${BUILD_WITH_SSE_INTRINSICS}")
-	message(VERBOSE "BUILD_WITH_AVX_INTRINSICS: ${BUILD_WITH_AVX_INTRINSICS}")
-
-	target_compile_definitions(libmath INTERFACE $<$<BOOL:${BUILD_WITH_ARM_INTRINSICS}>: -DWITH_ARM_INTRINSICS>)
-	target_compile_definitions(libmath INTERFACE $<$<BOOL:${BUILD_WITH_SSE_INTRINSICS}>: -DWITH_SSE_INTRINSICS>)
-	target_compile_definitions(libmath INTERFACE $<$<BOOL:${BUILD_WITH_AVX_INTRINSICS}>: -DWITH_AVX_INTRINSICS>)
-
 	target_compile_features(libmath INTERFACE cxx_std_17)
 
 	# INCLUDE
@@ -88,6 +61,37 @@ cmake_minimum_required(VERSION 3.8)
 	include(CTest)
 
 	if(BUILD_TESTING)
+
+		if (BUILD_WITH_AVX_INTRINSICS)
+			set (BUILD_WITH_SSE_INTRINSICS ON CACHE BOOL "force SSE intrinsics" FORCE)
+
+			if (NOT MSVC)
+				# Enable AVX
+				#
+
+				target_compile_options(libmath INTERFACE "-mavx")
+			endif()
+		elseif (BUILD_WITH_ARM_INTRINSICS)
+			if (NOT MSVC)
+				# Enable NEON
+				#
+
+				target_compile_options(libmath INTERFACE "-march=armv8.1-a+simd")
+			endif()
+		endif(BUILD_WITH_AVX_INTRINSICS)
+
+		add_library(libmath-test INTERFACE)
+
+		message(VERBOSE "BUILD_WITH_ARM_INTRINSICS: ${BUILD_WITH_ARM_INTRINSICS}")
+		message(VERBOSE "BUILD_WITH_SSE_INTRINSICS: ${BUILD_WITH_SSE_INTRINSICS}")
+		message(VERBOSE "BUILD_WITH_AVX_INTRINSICS: ${BUILD_WITH_AVX_INTRINSICS}")
+
+		target_compile_definitions(libmath-test INTERFACE $<$<BOOL:${BUILD_WITH_ARM_INTRINSICS}>: -DWITH_ARM_INTRINSICS>)
+		target_compile_definitions(libmath-test INTERFACE $<$<BOOL:${BUILD_WITH_SSE_INTRINSICS}>: -DWITH_SSE_INTRINSICS>)
+		target_compile_definitions(libmath-test INTERFACE $<$<BOOL:${BUILD_WITH_AVX_INTRINSICS}>: -DWITH_AVX_INTRINSICS>)
+
+		target_link_libraries(libmath-test INTERFACE libmath)
+
 		add_executable(libmath-test-vector2 test/vector2.cc)
 		add_executable(libmath-test-vector3 test/vector3.cc)
 		add_executable(libmath-test-vector4 test/vector4.cc)
@@ -102,12 +106,12 @@ cmake_minimum_required(VERSION 3.8)
 		add_test(NAME matrix3 COMMAND $<TARGET_FILE:libmath-test-matrix3>)
 		add_test(NAME matrix4 COMMAND $<TARGET_FILE:libmath-test-matrix4>)
 
-		target_link_libraries(libmath-test-vector2 PRIVATE libmath)
-		target_link_libraries(libmath-test-vector3 PRIVATE libmath)
-		target_link_libraries(libmath-test-vector4 PRIVATE libmath)
-		target_link_libraries(libmath-test-matrix2 PRIVATE libmath)
-		target_link_libraries(libmath-test-matrix3 PRIVATE libmath)
-		target_link_libraries(libmath-test-matrix4 PRIVATE libmath)
+		target_link_libraries(libmath-test-vector2 PRIVATE libmath-test)
+		target_link_libraries(libmath-test-vector3 PRIVATE libmath-test)
+		target_link_libraries(libmath-test-vector4 PRIVATE libmath-test)
+		target_link_libraries(libmath-test-matrix2 PRIVATE libmath-test)
+		target_link_libraries(libmath-test-matrix3 PRIVATE libmath-test)
+		target_link_libraries(libmath-test-matrix4 PRIVATE libmath-test)
 	endif()
 	
 	# ALIAS
